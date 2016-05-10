@@ -54,17 +54,21 @@ public class UserTest{
   public void User_DeletesUserFromDataBase() {
     User newUser = new User("Bill", "512-124-1234");
     newUser.save();
-    User.delete(newUser);
-    assertTrue(User.all().size() == 0);
+    newUser.delete();
+    assertEquals(null, User.find(newUser.getId()));
   }
 
-  // @Test
-  // public void Checkout_CheckoutisSavedtoDataBase_true(){
-  //   Book newBook = new Book("Bills book", "Bob", 12);
-  //   newBook.save();
-  //   User newUser = new User("Bill", "912-141-1411");
-  //   newUser.save();
-  //   newUser.checkout(newBook);
-  //   assertEquals
-  // }
+  @Test
+  public void User_ListsCheckedOutBooks_true(){
+    Book newBook = new Book("Bills book", "Bob", 12);
+    newBook.save();
+    User newUser = new User("Bill", "912-141-1411");
+    newUser.save();
+    newBook.checkout(newUser);
+    System.out.println(newBook.getId());
+    System.out.println(newUser.getId());
+    System.out.println(newUser.checkedOutBooks();
+    assertTrue(1 == newUser.checkedOutBooks().size());
+
+  }
 }

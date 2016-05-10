@@ -1,0 +1,9 @@
+post("/users/:id", (request, response) -> {
+  Map<String, Object> model = new HashMap<String, Object>();
+  // Book book = Book.find(Integer.parseInt(request.params(":id")));
+  User user = User.find(Integer.parseInt(request.params(":id")));
+  model.put("user", user);
+  model.put("books",user.checkedOutBooks());
+  response.redirect("/users/" + user.getId());
+  return null;
+  });

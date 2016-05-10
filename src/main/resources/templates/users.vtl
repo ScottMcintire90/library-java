@@ -1,0 +1,20 @@
+<div class="container">
+  <h1 class="jumbotron">Users</h1>
+  <h2>Our Users:</h2>
+  <ul>
+    #foreach($user in $users)
+      <li><a href = "/users/$user.getId()">$user.getName(), $user.getPhone()</a></li>
+    #end
+  </ul>
+  <h3>Add a new user</h3>
+  <form action="/users" method="post">
+    <label for="userName">Name:</label>
+    <input id="userName" name="userName" type="text">
+    <label for="userPhone">Phone number:</label>
+    <input id="userPhone" name="userPhone" type="text">
+
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</div>
+
+<a href="/" class="btn btn-default">Go home</a>

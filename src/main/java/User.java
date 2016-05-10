@@ -6,6 +6,7 @@ public class User {
   private String phone;
   private int id;
 
+
   public User(String name, String phone){
     this.name = name;
     this.phone = phone;
@@ -23,9 +24,16 @@ public class User {
     return id;
   }
 
+  public List<Book> checkedOutBooks(){
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT book_id FROM checkouts WHERE user_id = :id";
+      return con.createQuery(sql).addParameter("id", this.id).executeAndFetch(Book.class);
+    }
+  }
+
   public void save(){
     try(Connection con = DB.sql2o.open()){
-      String sql = "INSERT INTO users (name, phone) VALUES (:name, :phone);";
+      String sql = "INSERT INTO users (name, phone) VALUES (:name, :phone)";
       this.id = (int) con.createQuery(sql, true)
       .addParameter("name", this.name)
       .addParameter("phone", this.phone)
@@ -36,7 +44,7 @@ public class User {
 
   public static List<User> all(){
     try(Connection con = DB.sql2o.open()){
-      String sql = "SELECT name, phone FROM users;";
+      String sql = "SELECT * FROM users;";
       return con.createQuery(sql).executeAndFetch(User.class);
     }
   }
@@ -54,17 +62,17 @@ public class User {
 
   public static User find(int id) {
     try(Connection con = DB.sql2o.open()) {
-      String sql= "SELECT id, name, phone FROM users WHERE id = :id;";
+      String sql= "SELECT * FROM users WHERE id = :id;";
       return con.createQuery(sql)
       .addParameter("id", id)
       .executeAndFetchFirst(User.class);
     }
   }
 
-  public static void delete(User user){
+  public void delete(){
     try(Connection con = DB.sql2o.open()){
       String sql = "DELETE FROM users WHERE id = :id;";
-      con.createQuery(sql).addParameter("id", user.getId()).executeUpdate();
+      con.createQuery(sql).addParameter("id", this.getId()).executeUpdate();
     }
   }
 

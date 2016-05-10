@@ -6,11 +6,17 @@ public class Book {
   private String author;
   private int copies;
   private int id;
+  private Boolean checkedOut;
+  private int userId;
+  private String due_date = "2 weeks";
 
   public Book(String title, String author, int copies){
     this.title = title;
     this.author = author;
     this.copies = copies;
+    checkedOut = false;
+    this.userId = 0;
+    this.due_date = due_date;
   }
 
   public String getTitle(){
@@ -19,6 +25,14 @@ public class Book {
 
   public String getAuthor() {
     return author;
+  }
+
+  public String getDueDate() {
+    return due_date;
+  }
+
+  public int getUserId() {
+    return userId;
   }
 
   public int getId() {
@@ -43,7 +57,7 @@ public class Book {
 
   public static List<Book> all(){
     try(Connection con = DB.sql2o.open()){
-      String sql = "SELECT title, author, copies FROM books;";
+      String sql = "SELECT * FROM books;";
       return con.createQuery(sql).executeAndFetch(Book.class);
     }
   }
@@ -59,19 +73,38 @@ public class Book {
     }
   }
 
+  public void checkout(User user) {
+    this.userId = user.getId();
+    try(Connection con = DB.sql2o.open()) {
+      String sql1 = "INSERT INTO checkouts (book_id, user_id) VALUES (:book_id, :user_id);";
+      con.createQuery(sql1)
+        .addParameter("book_id", id)
+        .addParameter("user_id", user.getId())
+        .executeUpdate();
+    }
+  }
+
+  public boolean isCheckedOut() {
+    if (userId == 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   public static Book find(int id) {
     try(Connection con = DB.sql2o.open()) {
-      String sql= "SELECT id, title, author, copies FROM books WHERE id = :id;";
+      String sql= "SELECT * FROM books WHERE id = :id;";
       return con.createQuery(sql)
       .addParameter("id", id)
       .executeAndFetchFirst(Book.class);
     }
   }
 
-  public static void delete(Book user){
-    try(Connection con = DB.sql2o.open()){
+  public void delete() {
+    try(Connection con = DB.sql2o.open()) {
       String sql = "DELETE FROM books WHERE id = :id;";
-      con.createQuery(sql).addParameter("id", user.getId()).executeUpdate();
+      con.createQuery(sql).addParameter("id", this.getId()).executeUpdate();
     }
   }
 }

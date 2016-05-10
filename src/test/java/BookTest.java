@@ -54,7 +54,18 @@ public class BookTest{
   public void Book_DeletesBookFromDataBase() {
     Book newBook = new Book("Bills Book", "Bob", 1);
     newBook.save();
-    Book.delete(newBook);
-    assertTrue(Book.all().size() == 0);
+    newBook.delete();
+    assertEquals(null, Book.find(newBook.getId()));
+  }
+
+  @Test
+  public void Book_BookIsCheckedOut() {
+    Book newBook = new Book("Bills Book", "Bob", 1);
+    newBook.save();
+    User newUser = new User("Bill", "122-133-1311");
+    newUser.save();
+    Book savedBook = Book.find(newBook.getId());
+    savedBook.checkout(newUser);
+    assertEquals(true, savedBook.isCheckedOut());
   }
 }
