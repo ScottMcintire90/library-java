@@ -49,4 +49,22 @@ public class UserTest{
     newUser.save();
     assertTrue(newUser.equals(User.find(newUser.getId())));
   }
+
+  @Test
+  public void User_DeletesUserFromDataBase() {
+    User newUser = new User("Bill", "512-124-1234");
+    newUser.save();
+    User.delete(newUser);
+    assertTrue(User.all().size() == 0);
+  }
+
+  // @Test
+  // public void Checkout_CheckoutisSavedtoDataBase_true(){
+  //   Book newBook = new Book("Bills book", "Bob", 12);
+  //   newBook.save();
+  //   User newUser = new User("Bill", "912-141-1411");
+  //   newUser.save();
+  //   newUser.checkout(newBook);
+  //   assertEquals
+  // }
 }

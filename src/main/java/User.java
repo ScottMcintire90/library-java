@@ -60,4 +60,39 @@ public class User {
       .executeAndFetchFirst(User.class);
     }
   }
+
+  public static void delete(User user){
+    try(Connection con = DB.sql2o.open()){
+      String sql = "DELETE FROM users WHERE id = :id;";
+      con.createQuery(sql).addParameter("id", user.getId()).executeUpdate();
+    }
+  }
+
+  // public void checkout(Book book){
+  //   try(Connection con = DB.sql2o.open()){
+  //     String sql = "UPDATE checkouts SET user_id = :user_id && book_id = :book_id;";
+  //     con.createQuery(sql)
+  //     .addParameter("user_id", this.id)
+  //     .addParameter("book_id", book.getId())
+  //     .executeUpdate();
+  //   }
+  // }
+
+  // public static List<User> allCheckouts(){
+  //   try(Connection con = DB.sql2o.open()){
+  //     String sql = "SELECT book_id, user_id FROM checkouts;";
+  //     return con.createQuery(sql).executeAndFetch(User.class);
+  //   }
+  // }
+
+
+//   public Book getBook(int bookId){
+//     try(Connection con = DB.sql2o.open()){
+//       String sql = "SELECT * FROM checkouts WHERE user_id = :user_id AND WHERE id = :id;";
+//       return con.createQuery(sql)
+//       .addParameter("user_id", this.id)
+//       .addParameter("id", bookId)
+//       .executeAndFetchFirst(Book.class);
+//     }
+//   }
 }
