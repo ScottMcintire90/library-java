@@ -45,7 +45,7 @@ public class App {
       Book newBook = Book.find(bookId);
       newBook.checkout(user);
       model.put("user", user);
-      model.put("checks", user.checkedOutBooks();
+      model.put("checks", user.checkedOutBooks());
       response.redirect("/users/" + user.getId());
       System.out.println(user.checkedOutBooks());
       return null;

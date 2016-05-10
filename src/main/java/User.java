@@ -26,10 +26,23 @@ public class User {
 
   public List<Book> checkedOutBooks(){
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT book_id FROM checkouts WHERE user_id = :id";
-      return con.createQuery(sql).addParameter("id", this.id).executeAndFetch(Book.class);
+      String sql = "SELECT user_id FROM checkouts WHERE book_id = :book_id";
+      List<Integer> userIds = con.createQuery(sql)
+        .addParameter("book_id", this.getId())
+        .executeAndFetch(Integer.class);
+
+      List<User> users = new ArrayList<User>();
+
+    for (Integer userId : userIds) {
+      String sql1 = "SELECT * FROM users WHERE id = :userId;";
+      User user = con.createQuery(sql1)
+        .addParameter("userId", userId)
+        .executeAndFetchFirst(User.class);
+      users.add(user);
     }
+    return users;
   }
+}
 
   public void save(){
     try(Connection con = DB.sql2o.open()){
